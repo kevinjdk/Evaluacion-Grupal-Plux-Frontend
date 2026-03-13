@@ -1,0 +1,11 @@
+<div
+  class="result"
+  [ngClass]="{
+    'error': step === 'ERROR' || step === 'DECLINED',
+    'success': step === 'APPROVED'
+  }"
+  *ngIf="message"
+>
+  {{ message }}
+</div>
+

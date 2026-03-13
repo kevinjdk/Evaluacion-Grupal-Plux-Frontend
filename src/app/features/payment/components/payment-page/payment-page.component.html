@@ -1,0 +1,84 @@
+<div class="header-titles">
+  <h1>Plux Payment Demo</h1>
+</div>
+
+<div class="pay-container">
+  <h2>Caja de Pago Seguro</h2>
+
+  <div *ngIf="status === 'PROCESSING'" class="loading-state">
+    <p>Procesando transacción, por favor espera...</p>
+  </div>
+
+  <form *ngIf="status === 'PAYMENT' || status === 'ERROR' || status === 'DECLINED'" [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
+
+    <app-payment-result *ngIf="feedbackMessage" [step]="status" [message]="feedbackMessage"></app-payment-result>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombres</label>
+        <input formControlName="firstName" type="text" />
+      </div>
+      <div class="form-group">
+        <label>Apellidos</label>
+        <input formControlName="lastName" type="text" />
+      </div>
+      <div class="form-group">
+        <label>Documento</label>
+        <input formControlName="documentNumber" type="text" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input formControlName="email" type="email" />
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input formControlName="phone" type="text" />
+      </div>
+      <div class="form-group">
+        <label>Monto a Pagar (USD)</label>
+        <input formControlName="amount" type="number" step="0.01" />
+      </div>
+    </div>
+
+    <h3>Datos de Tarjeta</h3>
+    <div class="form-group">
+      <label>Número de Tarjeta</label>
+      <input formControlName="cardNumber" type="text" maxlength="16" />
+    </div>
+    <div class="card-extra-grid">
+      <div class="form-group">
+        <label>Mes</label>
+        <input formControlName="expMonth" type="text" maxlength="2" placeholder="MM" />
+      </div>
+      <div class="form-group">
+        <label>Año</label>
+        <input formControlName="expYear" type="text" maxlength="2" placeholder="YY" />
+      </div>
+      <div class="form-group">
+        <label>CVV</label>
+        <input formControlName="cvv" type="password" maxlength="4" />
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="paymentForm.invalid">Procesar Pago</button>
+  </form>
+
+  <div *ngIf="status === 'OTP_REQUIRED'" class="otp-state">
+    <h3>Validación OTP</h3>
+    <p>{{ feedbackMessage }}</p>
+    <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
+      <div class="form-group">
+        <label>Código Seguro</label>
+        <input formControlName="otpCode" type="text" maxlength="6" placeholder="Ej: 123456" />
+      </div>
+      <button type="submit" [disabled]="otpForm.invalid">Verificar Código</button>
+      <button type="button" style="background:#dc3545;margin-top:10px" (click)="status = 'PAYMENT'">Cancelar</button>
+    </form>
+  </div>
+
+  <div *ngIf="status === 'APPROVED'" class="success-state">
+    <h3>✅ ¡Pago Exitoso!</h3>
+    <p>{{ feedbackMessage }}</p>
+    <button (click)="status = 'PAYMENT'; paymentForm.reset()">Volver al Inicio</button>
+  </div>
+</div>
