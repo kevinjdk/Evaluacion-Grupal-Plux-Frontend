@@ -7,12 +7,12 @@ import { PaymentResponse } from '../interfaces/payment-response.interface';
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
   private http = inject(HttpClient);
-  
+
   processPayment(payload: any): Observable<PaymentResponse> {
-    return this.http.post<PaymentResponse>(environment.apiUrl + '/payments/process', payload);
+    return this.http.post<PaymentResponse>(environment.apiUrl + '/payment', payload);
   }
 
   confirmOtp(payload: any): Observable<PaymentResponse> {
-    return this.http.post<PaymentResponse>(environment.apiUrl + '/payments/confirm-otp', payload);
+    return this.http.post<PaymentResponse>(environment.apiUrl + '/payment/otp', payload);
   }
 }

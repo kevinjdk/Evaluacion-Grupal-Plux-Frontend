@@ -1,1 +1,4 @@
-export const PAYBOX_CONFIG = { clientId: '', environment: 'sandbox' };
+export const PAYBOX_CONFIG = {
+  clientId: '',
+  environment: 'sandbox'
+};
