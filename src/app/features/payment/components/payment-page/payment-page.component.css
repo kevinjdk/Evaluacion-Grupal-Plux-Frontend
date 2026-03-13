@@ -94,6 +94,15 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.btn-cancel {
+  background-color: #dc3545;
+  margin-top: 10px;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+}
+
 .loading-state,
 .otp-state,
 .success-state {

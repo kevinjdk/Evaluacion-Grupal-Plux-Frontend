@@ -79,7 +79,7 @@
         <input formControlName="otpCode" type="text" maxlength="6" placeholder="Ej: 123456" />
       </div>
       <button type="submit" [disabled]="otpForm.invalid">Verificar Código</button>
-      <button type="button" style="background:#dc3545;margin-top:10px" (click)="resetPayment()">Cancelar</button>
+      <button type="button" class="btn-cancel" (click)="resetPayment()">Cancelar</button>
     </form>
   </div>
 </div>
