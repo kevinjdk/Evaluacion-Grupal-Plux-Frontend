@@ -86,13 +86,13 @@ export class PaymentPageComponent {
 
     const payload = {
       ...this.currentPayload,
-      description: "Pago con OTP", // actualizamos description
+      description: "Pago con OTP",
       paramsOtp: {
         otpCode: this.otpForm.value.otpCode,
         idTransaction: this.pendingOtpData.idTransaction,
         sessionId: this.pendingOtpData.sessionId,
         tkn: this.pendingOtpData.tkn,
-        tknky: this.pendingOtpData.tknky, // Importante: tknky y no tknKy
+        tknky: this.pendingOtpData.tknky,
         tkniv: this.pendingOtpData.tkniv
       }
     };
@@ -115,14 +115,13 @@ export class PaymentPageComponent {
         this.status = 'OTP_REQUIRED';
         break;
       case 102:
-        // OTP Incorrecto, nos mantenemos en la vista de OTP
         this.status = 'OTP_REQUIRED';
         this.otpForm.get('otpCode')?.reset();
         break;
       case 103:
         this.status = '3DS_REQUIRED';
         if (res.detail?.url) {
-          window.location.href = res.detail.url; // Redirección a pasarela 3DS
+          window.location.href = res.detail.url;
         }
         break;
       default:
