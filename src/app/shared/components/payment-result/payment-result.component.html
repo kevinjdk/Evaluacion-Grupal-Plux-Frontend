@@ -1,11 +1,56 @@
-<div
-  class="result"
-  [ngClass]="{
-    'error': step === 'ERROR' || step === 'DECLINED',
-    'success': step === 'APPROVED'
-  }"
-  *ngIf="message"
->
-  {{ message }}
+<div class="result-card" *ngIf="step === 'APPROVED'">
+  <h2 class="title-success">¡Pago Procesado con Éxito!</h2>
+  <p class="subtitle">{{ message || 'Tu transacción fue procesada correctamente.' }}</p>
+
+  <div class="details-table" *ngIf="detail">
+    <div class="detail-row">
+      <span>Comprobante</span>
+      <strong>{{ detail.token || detail.id_transaccion }}</strong>
+    </div>
+    <div class="detail-row">
+      <span>Monto</span>
+      <strong>${{ detail.amountWTaxes || detail.amount }} USD</strong>
+    </div>
+    <div class="detail-row">
+      <span>Tarjeta</span>
+      <strong>{{ detail.cardIssuer }} {{ detail.cardInfo }}</strong>
+    </div>
+    <div class="detail-row">
+      <span>Titular</span>
+      <strong>{{ detail.clientName }}</strong>
+    </div>
+    <div class="detail-row">
+      <span>Fecha</span>
+      <strong>{{ detail.fecha }}</strong>
+    </div>
+    <div class="detail-row">
+      <span>Banco</span>
+      <strong>{{ detail.acquirer || 'N/A' }}</strong>
+    </div>
+    <div class="detail-row">
+      <span>Estado</span>
+      <span class="badge success-badge">{{ detail.state || 'PAGADO' }}</span>
+    </div>
+  </div>
+
+  <button class="btn-action btn-purple" (click)="onRetry()">Realizar otro pago</button>
+</div>
+
+<div class="result-card" *ngIf="step === 'ERROR' || step === 'DECLINED'">
+
+  <h2 class="title-error">Pago no procesado</h2>
+  <!-- Detail presentation -->
+  <p class="error-detail" *ngIf="detail && typeofDetail === 'string'">
+      {{ detail }}
+  </p>
+  <p class="error-detail" *ngIf="!detail || typeofDetail !== 'string'">
+      {{ message || 'Error al procesar el pago' }}
+  </p>
+
+  <p class="subtitle text-muted">
+    Verifique los datos de su tarjeta, que tenga cupo disponible, o intente con otro medio de pago.
+  </p>
+
+  <button class="btn-action btn-purple" (click)="onRetry()">Intentar nuevamente</button>
 </div>
 

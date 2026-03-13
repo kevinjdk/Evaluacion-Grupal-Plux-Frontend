@@ -18,6 +18,7 @@ export class PaymentPageComponent implements OnInit {
 
   status: 'PAYMENT' | 'OTP_REQUIRED' | '3DS_REQUIRED' | 'APPROVED' | 'DECLINED' | 'ERROR' | 'PROCESSING' = 'PAYMENT';
   feedbackMessage = '';
+  paymentDetail: any = null;
   pendingOtpData: any = null;
   private currentPayload: any = null;
 
@@ -128,6 +129,7 @@ export class PaymentPageComponent implements OnInit {
 
   private handleBackendResponse(res: PaymentResponse) {
     this.feedbackMessage = res.description || 'Procesado';
+    this.paymentDetail = res.detail || null;
 
     switch (res.code) {
       case 0:
@@ -156,6 +158,19 @@ export class PaymentPageComponent implements OnInit {
   private handleError(err: any) {
     this.status = 'ERROR';
     this.feedbackMessage = err?.error?.description || err?.message || 'Error de conexión con el backend local.';
+    this.paymentDetail = err?.error?.detail || err?.error || null;
     console.error(err);
+  }
+
+  resetPayment() {
+    this.status = 'PAYMENT';
+    this.paymentForm.reset({
+      amount: 10.00
+    });
+    this.otpForm.reset();
+    this.feedbackMessage = '';
+    this.paymentDetail = null;
+    this.pendingOtpData = null;
+    this.currentPayload = null;
   }
 }

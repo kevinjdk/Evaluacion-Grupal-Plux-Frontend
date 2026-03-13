@@ -9,9 +9,7 @@
     <p>Procesando transacción, por favor espera...</p>
   </div>
 
-  <form *ngIf="status === 'PAYMENT' || status === 'ERROR' || status === 'DECLINED'" [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
-
-    <app-payment-result *ngIf="feedbackMessage" [step]="status" [message]="feedbackMessage"></app-payment-result>
+  <form *ngIf="status === 'PAYMENT'" [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
 
     <div class="form-grid">
       <div class="form-group">
@@ -63,6 +61,15 @@
     <button type="submit" [disabled]="paymentForm.invalid">Procesar Pago</button>
   </form>
 
+  <div *ngIf="status === 'APPROVED' || status === 'ERROR' || status === 'DECLINED'">
+    <app-payment-result
+      [step]="status"
+      [message]="feedbackMessage"
+      [detail]="paymentDetail"
+      (retry)="resetPayment()">
+    </app-payment-result>
+  </div>
+
   <div *ngIf="status === 'OTP_REQUIRED'" class="otp-state">
     <h3>Validación OTP</h3>
     <p>{{ feedbackMessage }}</p>
@@ -72,13 +79,7 @@
         <input formControlName="otpCode" type="text" maxlength="6" placeholder="Ej: 123456" />
       </div>
       <button type="submit" [disabled]="otpForm.invalid">Verificar Código</button>
-      <button type="button" style="background:#dc3545;margin-top:10px" (click)="status = 'PAYMENT'">Cancelar</button>
+      <button type="button" style="background:#dc3545;margin-top:10px" (click)="resetPayment()">Cancelar</button>
     </form>
-  </div>
-
-  <div *ngIf="status === 'APPROVED'" class="success-state">
-    <h3>✅ ¡Pago Exitoso!</h3>
-    <p>{{ feedbackMessage }}</p>
-    <button (click)="status = 'PAYMENT'; paymentForm.reset()">Volver al Inicio</button>
   </div>
 </div>
