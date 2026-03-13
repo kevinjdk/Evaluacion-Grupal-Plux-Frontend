@@ -15,4 +15,8 @@ export class PaymentService {
   confirmOtp(payload: any): Observable<PaymentResponse> {
     return this.http.post<PaymentResponse>(environment.apiUrl + '/payment/otp', payload);
   }
+
+  confirm3DS(payload: { pti: string, pcc: string, ptk: string }): Observable<PaymentResponse> {
+    return this.http.post<PaymentResponse>(environment.apiUrl + '/payment/3ds/confirm', payload);
+  }
 }

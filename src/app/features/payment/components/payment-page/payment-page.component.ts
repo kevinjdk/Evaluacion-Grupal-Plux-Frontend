@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentResultComponent } from '../../../../shared/components/payment-result/payment-result.component';
@@ -12,7 +12,7 @@ import { PaymentResponse } from '../../../../core/interfaces/payment-response.in
   templateUrl: './payment-page.component.html',
   styleUrls: ['./payment-page.component.css']
 })
-export class PaymentPageComponent {
+export class PaymentPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private paymentService = inject(PaymentService);
 
@@ -38,6 +38,28 @@ export class PaymentPageComponent {
     otpCode: ['', [Validators.required, Validators.minLength(6)]]
   });
 
+  ngOnInit() {
+    this.check3DSCallback();
+  }
+
+  private check3DSCallback() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pti = urlParams.get('pti');
+    const pcc = urlParams.get('pcc');
+    const ptk = urlParams.get('ptk');
+
+    if (pti && pcc && ptk) {
+      this.status = 'PROCESSING';
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+
+      this.paymentService.confirm3DS({ pti, pcc, ptk }).subscribe({
+        next: (res: PaymentResponse) => this.handleBackendResponse(res),
+        error: (err: any) => this.handleError(err)
+      });
+    }
+  }
+
   private buildBasePayload() {
     const formVal = this.paymentForm.value;
     return {
@@ -57,6 +79,7 @@ export class PaymentPageComponent {
       installments: "0",
       interests: "0",
       description: "Pago prueba desde Angular",
+      urlRetorno3ds: window.location.origin + window.location.pathname,
       shippingAddress: {
         country: "Ecuador",
         city: "Quito",
