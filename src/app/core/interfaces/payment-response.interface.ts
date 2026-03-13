@@ -1,5 +1,6 @@
-﻿export interface PaymentResponse { success: boolean;
-  status: 'APPROVED' | 'DECLINED' | 'ERROR' | 'OTP_REQUIRED' | '3DS_REQUIRED';
-  message: string;
-  data?: any;
+﻿export interface PaymentResponse {
+  code: number;
+  description: string;
+  detail?: any;
+  status: string;
 }
